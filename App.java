@@ -1,55 +1,95 @@
-// import the Scanner class
-import java.util.Scanner;
+package Examples;
 
-public class App {
-    // Scanner Object
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+
+public class EraStore {
     static Scanner scan = new Scanner(System.in);
+    static double VAT = 0.12;
 
     public static void main(String[] args) {
         myOrder();
     }
 
     static void myOrder() {
-        System.out.println("Welcome to Lazada!");
-
-        System.out.print("Enter your first item:");
-        String item1 = scan.nextLine();
-        System.out.print("Enter price:");
-        double price1 = scan.nextDouble();
-
-        // This will prevent input skip
+        System.out.print("Customer's Name: ");
         scan.nextLine();
+        System.out.println(" ");
+        System.out.println("***************************");
+        System.out.println("WELCOME TO THE ERA'S STORE!");
+        System.out.println("***************************");
+        System.out.println(" ");
+        
+        List<Item> items = new ArrayList<>();
 
-        System.out.print("Enter your second item:");
-        String item2 = scan.nextLine();
-        System.out.print("Enter price:");
-        double price2 = scan.nextDouble();
+        for (int i = 1; i <= 3; i++) {
+            System.out.print("ENTER ITEM " + i + ": ");
+            String itemName = scan.nextLine();
+            
+            System.out.print("PRICE: ");
+            double itemPrice = scan.nextDouble();
+            scan.nextLine();
+            
+            System.out.print("QUANTITY: ");
+            int itemQuantity = scan.nextInt();
+            scan.nextLine();
 
-        // This will prevent input skip
-        scan.nextLine();
+            Item item = new Item(itemName, itemPrice, itemQuantity);
+            items.add(item);
 
-        System.out.print("Enter your third item:");
-        String item3 = scan.nextLine();
-        System.out.print("Enter price:");
-        double price3 = scan.nextDouble();
+            double itemTotal = itemPrice * itemQuantity;
+            System.out.println("ITEM " + i + "TOTAL: " + itemTotal + " php");
+        }
 
-        scan.nextLine();
+        double subtotal = items.stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
+        double vat = VAT * subtotal;
+        double totalCost = subtotal + vat;
 
-        System.out.print("Enter your fourth item:");
-        String item4 = scan.nextLine();
-        System.out.print("Enter price:");
-        double price4 = scan.nextDouble();
+        System.out.println(" ");
+        System.out.println("********** INVOICE **********");
+        System.out.println("Sub Total: " + subtotal + " php");
+        System.out.println("VAT : " + vat + " php");
+        System.out.println("Total Cost: " + totalCost + " php");
 
-        scan.nextLine();
+        double cashAmount;
+        do {
+            System.out.print("CASH: ");
+            cashAmount = scan.nextDouble();
 
-        System.out.print("Enter your fifth item:");
-        String item5 = scan.nextLine();
-        System.out.print("Enter price:");
-        double price5 = scan.nextDouble();
+            if (cashAmount < totalCost) {
+                System.out.println("NOT ENOUGH BALANCE.");
+            }
+        } while (cashAmount < totalCost);
 
-        double totalAmount = price1 + price2 + price3 + price4 + price5;
+        double change = cashAmount - totalCost;
 
-        System.out.println("Your order is: " + item1 + " " + item2 + " " + item3 + " " + item4 + " " + item5 + " ");
-        System.out.println("Your total amount is: " + totalAmount);
+        System.out.println("CHANGE: " + change + " php");
+        System.out.println(" ");
+        System.out.println("********** COME AGAIN! UWU>< **********");
+    }
+}
+
+class Item {
+    private String name;
+    private double price;
+    private int quantity;
+
+    public Item(String name, double price, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }
